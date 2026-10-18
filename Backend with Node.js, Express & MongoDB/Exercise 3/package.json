@@ -1,0 +1,19 @@
+{
+  "name": "exercise-3",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Hussein",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.11.2"
+  }
+}
