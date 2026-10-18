@@ -3,3 +3,11 @@
 
 .env
 node_modules/
+
+.env
+node_modules/
+
+# Ignore local dependencies and macOS files
+node_modules/
+.DS_Store
+.env
