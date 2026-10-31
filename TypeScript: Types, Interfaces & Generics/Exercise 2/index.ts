@@ -1,39 +1,19 @@
-// productName = 100;           
-// price = "expensive";         
-// discountAvailable = "yes";  
-
-let productName: string = "Product 1";
-let price: number = 100;
-let discountAvailable: boolean = true;
+// let names: string[] = [true, false, true]
+// let grades: number[] = ["Hussein", "Ali", "Ahmed"]
+// let statuses: boolean[] = [100, 90, 80]
 
 
-// 
-// function getDiscount(price, discount) {
-//     return price - price * discount;
-//   }
+let names: string[] = ["Hussein", "Ali", "Ahmed"]
+let grades: number[] = [100, 90, 80]
+let statuses: boolean[] = [true, false, true]
 
 
-function getDiscount(price: number, discount: number): number {
-    return price - price * discount;
-  }
-  
-  const discountedPrice = getDiscount(246, 0.5);
-  if (discountedPrice === 123) {
-    throw new Error("Crashed because output is 123");
-  }
+// Converting this to TypeScript:
+// let products = ["Phone", "Laptop", 99];
 
-//   function printLength(x: any) {
-//     console.log(x.length);
-//   }
 
-function printLength(x: any) {
-    console.log(x.length);
-  }
-  
-  
+let products: (string )[] = ["Phone", "Laptop", 99]
 
-let input: unknown | string | number;
-input = 42;
-input = "Hello";
 
-console.log(input);
+let locations: [string, number, number] = ["New York", 100, 100.5]
+
