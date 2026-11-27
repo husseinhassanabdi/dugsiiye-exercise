@@ -27,7 +27,8 @@ export async function POST(req: Request) {
   success: true,
   result,
   joke: result?.joke ? result : null,
-  text: JSON.stringify(result),
+  text: typeof result === "string" ? result : JSON.stringify(result),
+  // text: JSON.stringify(result),
 });
   } catch (error) {
     console.error("Database query error:", error);

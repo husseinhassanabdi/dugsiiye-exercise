@@ -17,13 +17,15 @@ const querySchema = z.object({
     "count_movies_by_genre",
     "search_movies",
     "get_joke",
+    "general_chat",
   ]),
   value: z.union([z.string(), z.number()]).nullable(),
 });
 
 export async function understandDatabaseQuestion(question: string) {
   const response = await openrouter.chat.completions.create({
-    model: "openrouter/free",
+
+      model: "baidu/ernie-5.5-flash-preview:free",
 
     messages: [
       {
@@ -37,6 +39,13 @@ export async function understandDatabaseQuestion(question: string) {
         4. count_movies_by_genre
         5. search_movies (value must be the movie title the user wants to search for)
         6. get_joke (use this when the user asks for a dad joke or a random joke)
+        7. general_chat (use this for greetings, normal conversations,
+        general knowledge, explanations, and questions unrelated to database queries).
+
+          IMPORTANT:
+          -Do not classify normal conversation as a database query.
+          -Use general_chat when the user asks something that doesn't require database data.
+          For general_chat, value must be null.
 
         If the user asks for highly rated movies without specifying a rating,
         use 8 as the default value.
@@ -61,7 +70,14 @@ export async function understandDatabaseQuestion(question: string) {
     throw new Error("AI returned an empty response");
   }
 
-  const parsed = querySchema.safeParse(JSON.parse(content));
+  // const parsed = querySchema.safeParse(JSON.parse(content));
+
+  const cleanedContent = content
+  .replace(/```json/gi, "")
+  .replace(/```/g, "")
+  .trim();
+
+const parsed = querySchema.safeParse(JSON.parse(cleanedContent));
 
   if (!parsed.success) {
     throw new Error("AI returned an invalid database action");
@@ -71,11 +87,32 @@ export async function understandDatabaseQuestion(question: string) {
 }
 
 
+export async function generateGeneralResponse(question: string) {
+  const response = await openrouter.chat.completions.create({
+   model: "baidu/ernie-5.5-flash-preview:free",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful AI assistant. Answer general questions clearly, naturally, and accurately.",
+      },
+      {
+        role: "user",
+        content: question,
+      },
+    ],
+  });
+
+  return response.choices[0]?.message?.content || "I couldn't generate a response.";
+}
+
 
 export async function executeDatabaseQuestion(question: string) {
   const query = await understandDatabaseQuestion(question);
 
   switch (query.action) {
+    case "general_chat":
+  return await generateGeneralResponse(question);
+
     case "movies_by_genre":
       if (typeof query.value !== "string") {
         throw new Error("A movie genre is required");
@@ -109,6 +146,13 @@ export async function executeDatabaseQuestion(question: string) {
   }
   
 }
+
+
+//  if (query.action === "general_chat") {
+//   return await generateGeneralResponse(question);
+
+// }
+
 
 // Find movies by genre
 export async function findMoviesByGenre(genre: string) {
